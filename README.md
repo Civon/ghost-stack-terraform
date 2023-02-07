@@ -1,5 +1,13 @@
 # IaaS for GhostCMS
 
+🚧WIP
+
+## Features
+- Ghost instance with MySQL         🚧
+- external cloud storage on Azure   🚧
+- DNS record                        🚧
+- CDN and Cache server              🚧
+
 ## Prerequisites
 
 - terrafrom

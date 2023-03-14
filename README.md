@@ -5,7 +5,7 @@
 ## Features
 - Ghost instance with MySQL         🚧
 - external cloud storage on Azure   🚧
-- DNS record                        🚧
+- ~~DNS record                        🚧~~
 - CDN and Cache server              🚧
 
 ## Prerequisites
@@ -24,11 +24,10 @@
 
 ## Usage
 
-VS Code command plate:
+in VS Code command plate:
 
 1. Terraform: push
-2. Terraform: init
-3. Terraform: plan
+2. Terraform: init(once)
+3. Terraform: plan, and open cloudshell via pop-up dialog
 4. Terraform: apply
 5. if needed, Terraform: destory 
-

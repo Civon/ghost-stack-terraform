@@ -1,0 +1,5 @@
+.env.local
+.env
+secrets.tfvars
+# DONT comment. have secret
+main.tf

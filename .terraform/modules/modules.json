@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"web_app_container","Source":"registry.terraform.io/innovationnorway/web-app-container/azurerm","Version":"2.6.0","Dir":".terraform/modules/web_app_container"}]}

@@ -32,18 +32,18 @@ services:
     environment:
       # see https://ghost.org/docs/config/#configuration-options
       database__client: mysql
-      database__connection__host: ${DATABASE_HOST}
-      database__connection__user: ${DATABASE_USER}
-      database__connection__password: ${DATABASE_PASSWORD}
+      database__connection__host: $${DATABASE_HOST}
+      database__connection__user: $${DATABASE_USER}
+      database__connection__password: $${DATABASE_PASSWORD}
       # database__connection__password: example
-      database__connection__database: ${DATABASE_NAME}
+      database__connection__database: $${DATABASE_NAME}
       # this url value is just an example, and is likely wrong for your environment!
-      url: ${URL}
+      url: $${URL}
       # contrary to the default mentioned in the linked documentation, this image defaults to NODE_ENV=production (so development mode needs to be explicitly specified if desired)
       #NODE_ENV: development
     volumes:
       # - /home/site/content:/var/lib/ghost/content
-      - ${WEBAPP_STORAGE_HOME}/content:/var/lib/ghost/content/
+      - $${WEBAPP_STORAGE_HOME}/content:/var/lib/ghost/content/
       - ghostimagesss:/var/lib/ghost/content/images/
 
     # network_mode: "host"

@@ -1,5 +1,5 @@
 variable "resource_group_location" {
-  default     = "eastus"
+  default     = "westus" #uk europe ukwest eastus2
   description = "Location of the resource group."
 }
 
@@ -14,20 +14,24 @@ variable "sku_name" {
 }
 variable "always_on" {
   default = false
-  description = "if using F1 plan, always_on must be false"
+  description = "For F1 plan, always_on must be false"
 }
 variable "docker_registry_url" {
   type = string
+  sensitive = true
 }
 variable "docker_registry_username" {
   type = string
+  sensitive = true
 }
 variable "docker_registry_password" {
   type = string
+  sensitive = true
 }
 
 variable "database_host" {
   type = string
+  sensitive = true
 }
 variable "database_name" {
   description = "The name of the database"
@@ -37,17 +41,20 @@ variable "database_name" {
 variable "database_password" {
   description = "The password for the database user"
   type        = string
+  sensitive = true
 }
 
 variable "database_user" {
   description = "The username for the database user"
   type        = string
+  sensitive = true
 }
 
 variable "docker_registry_server_url" {
   description = "The URL for the Docker registry server"
   type        = string
   default = "https://index.docker.io/v1"
+  sensitive = true
 }
 
 # variable "url" {
@@ -66,6 +73,6 @@ variable "websites_enable_app_service_storage" {
 # }
 
 locals {
-  url = "https://webapp-${var.app_name}.azurewebsites.net"
+  # url = "https://webapp-${var.app_name}.azurewebsites.net"
 
 }

@@ -4,52 +4,59 @@ resource "azurerm_resource_group" "rg" {
   name     = "${var.app_name}-rg"
 }
 
-module "web_app_container" {
-  source = "innovationnorway/web-app-container/azurerm"
-
-  name                = "${var.app_name}-webapp"
+# Create the Linux App Service Plan
+resource "azurerm_service_plan" "appserviceplan" {
+  name                = "${var.app_name}-webapp-asp"
+  location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  port                = 8080
-  always_on           = var.always_on
-
-  docker_registry_url      = var.docker_registry_url
-  docker_registry_username = var.docker_registry_username
-  docker_registry_password = var.docker_registry_password
-
-  container_type   = "compose"
-  container_config = <<EOF
-# by default, the Ghost image will use SQLite (and thus requires no separate database container)
-# we have used MySQL here merely for demonstration purposes (especially environment-variable-based configuration)
-
-version: "3.1"
-
-services:
-  ghost:
-    image: ghost:5-alpine
-    restart: always
-    ports:
-      - 8080:2368
-    environment:
-      # see https://ghost.org/docs/config/#configuration-options
-      database__client: mysql
-      database__connection__host: $${DATABASE_HOST}
-      database__connection__user: $${DATABASE_USER}
-      database__connection__password: $${DATABASE_PASSWORD}
-      # database__connection__password: example
-      database__connection__database: $${DATABASE_NAME}
-      # this url value is just an example, and is likely wrong for your environment!
-      url: $${URL}
-      # contrary to the default mentioned in the linked documentation, this image defaults to NODE_ENV=production (so development mode needs to be explicitly specified if desired)
-      #NODE_ENV: development
-    volumes:
-      # - /home/site/content:/var/lib/ghost/content
-      - $${WEBAPP_STORAGE_HOME}/content:/var/lib/ghost/content/
-      - ghostimagesss:/var/lib/ghost/content/images/
-
-    # network_mode: "host"
-
-EOF
+  os_type             = "Linux"
+  sku_name            = var.sku_name
+  # reserved            = true # Mandatory for Linux plans
 }
-resource "azurerm_app_service" "main" {
-sku_name = var.sku_name
+
+# Create the web app, pass in the App Service Plan ID
+resource "azurerm_linux_web_app" "webapp" {
+  name                = "${var.app_name}-webapp"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  service_plan_id     = azurerm_service_plan.appserviceplan.id
+  # https_only            = true
+  site_config {
+    always_on = false # must be explicitly set to false when using Free, F1, D1, or Shared Service Plans.
+    application_stack {
+      docker_image     = "ghost"
+      docker_image_tag = "5-alpine"
+    }
+
+  }
+
+  app_settings = {
+    # Do not attach Storage by default?
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE = var.websites_enable_app_service_storage
+
+    # /*
+    # Settings for private Container Registires  
+    DOCKER_REGISTRY_SERVER_URL      = var.docker_registry_url
+    DOCKER_REGISTRY_SERVER_USERNAME = var.docker_registry_username
+    DOCKER_REGISTRY_SERVER_PASSWORD = var.docker_registry_password
+    # */
+
+    # Downloaded Application Settings from "mlab-docker-test"
+    database__connection__client   = "mysql"
+    database__connection__port     = "3306"
+    database__connection__host     = var.database_host
+    database__connection__user     = var.database_user
+    database__connection__password = var.database_password
+    database__connection__database = var.database_name
+
+    # url = var.url
+    url = "https://${var.app_name}-webapp.azurewebsites.net"
+  }
+  # storage_account {
+
+  # }
+
+  # application_logs {
+  #   file_system_level = "Warning"
+  # }
 }

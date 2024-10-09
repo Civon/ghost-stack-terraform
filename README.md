@@ -1,4 +1,4 @@
-# IaaS for GhostCMS
+# IaC for GhostCMS on Azure
 
 🚧WIP
 
